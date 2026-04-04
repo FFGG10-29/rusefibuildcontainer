@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM ubuntu:noble
+FROM ubuntu:resolute
 COPY config.sh /config.sh
 COPY provide_gcc.sh /provide_gcc.sh
 COPY upload_ini.sh /upload_ini.sh
