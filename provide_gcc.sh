@@ -4,39 +4,34 @@
 
 set -e
 
-# URL to download original toolchain from
-# URL="https://github.com/rusefi/build_support/raw/master/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-eabi.tar.xz"
-URL="https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz";
-# This is the md5sum of the /bin/arm-none-eabi-ld executable within the archive, used for verifying we have the proper version.
-# If you change the above URL, you will need to update this checksum as well.
+# ARM GCC 14.2.rel1 toolchain
+URL="https://developer.arm.com/-/media/Files/downloads/gnu/14.2.rel1/binrel/arm-gnu-toolchain-14.2.rel1-x86_64-arm-none-eabi.tar.xz"
 MANIFEST_SUM="d7145e6152652d550651e1ceeb9eea86"
-# colloquial directory name, to afford re-use of script
 COLLOQUIAL="gcc-arm-none-eabi"
-# temporary working directory
 TMP_DIR="/tmp/rusefi-provide_gcc14"
 
 archive="${URL##*/}"
-
 SWD="$PWD"
 
-## If the checksum file doesn't exist, or if its checksum doesn't match, then download and install the archive.
-#if [ ! -f "${TMP_DIR}"/*/bin/arm-none-eabi-ld ] ||\
-#   [ "$MANIFEST_SUM" != "$(md5sum ${TMP_DIR}/*/bin/arm-none-eabi-ld | cut -d ' ' -f 1)" ]; then
-	rm -rf "${TMP_DIR}"
-	# Download and extract archive
-	echo Downloading and extracting ${archive}
-	mkdir -p "${TMP_DIR}"
-	cd "${TMP_DIR}"
-	curl -L -o "${archive}" "${URL}"
-	tar -xaf "${archive}"
-	echo "Cleaning ${archive}"
-	rm "${archive}"
-#else
-#	echo "Toolkit already present"
-#fi
+# Download and extract
+rm -rf "${TMP_DIR}"
+echo "Downloading and extracting ${archive}..."
+mkdir -p "${TMP_DIR}"
+cd "${TMP_DIR}"
+curl -L -o "${archive}" "${URL}"
+tar -xaf "${archive}"
+echo "Cleaning ${archive}"
+rm "${archive}"
 
-# Create colloquially named link
+# Link all arm-none-eabi-* binaries to /usr/bin/
 cd "$SWD"
-echo "Linking ${TMP_DIR} ${COLLOQUIAL}"
-ln -sf "${TMP_DIR}"/*/bin/* /usr/bin/
+echo "Linking arm-none-eabi tools to /usr/bin/..."
+for f in "${TMP_DIR}"/*/bin/arm-none-eabi-"*"; do
+	if [ -f "$f" ]; then
+		ln -sf "$f" /usr/bin/
+	fi
+done
 
+# Verify installation
+echo "GCC version:"
+arm-none-eabi-gcc --version || echo "WARNING: arm-none-eabi-gcc not found"
