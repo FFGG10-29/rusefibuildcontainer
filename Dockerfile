@@ -1,12 +1,12 @@
-FROM ubuntu:noble
-COPY config.sh /config.sh
-COPY provide_gcc.sh /provide_gcc.sh
-COPY upload_ini.sh /upload_ini.sh
-RUN chmod 777 /upload_ini.sh
-
-# è½¬æ¢ CRLF â†’ LF (Windows å®¿ä¸»æœºæ–‡ä»¶å¯èƒ½å¸¦æœ‰ CRLF æ¢è¡Œç¬¦)
-RUN sed -i 's/\r$//' /config.sh /provide_gcc.sh /upload_ini.sh
-
-RUN /config.sh
-# GCC è½¯é“¾æ¥å·²åœ¨ provide_gcc.sh ä¸­åˆ›å»º (14.2.rel1 â†’ /usr/bin/)
+FROM ubuntu:noble 
+COPY config.sh /config.sh 
+COPY provide_gcc.sh /provide_gcc.sh 
+COPY upload_ini.sh /upload_ini.sh 
+RUN chmod 777 /upload_ini.sh 
+ 
+# ×ª»» CRLF ¡ú LF 
+RUN sed -i 's/\r$//' /config.sh /provide_gcc.sh /upload_ini.sh 
+ 
+RUN /config.sh 
+# GCC ÈíÁ´½ÓÒÑÔÚ provide_gcc.sh ÖĞ´´½¨ 
 CMD ["/bin/bash"]
