@@ -1,20 +1,18 @@
+#!/usr/bin/env bash
+set -e
 
+# 更新包索引
 apt-get -y update
 
+# 安装基础工具链和依赖
 apt-get -y install sudo git curl xz-utils openjdk-21-jdk-headless
 apt-get -y install make
 apt-get -y install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools zip dosfstools
 apt-get -y install build-essential gcc gdb gcc-multilib make openjdk-11-jdk-headless xxd nano rsync wget
 apt-get -y install libncurses5 libncursesw5 libarchive-zip-perl bsdextrautils
-apt-get -y install  python3-pip python3 python3-pandas openjfx libopenjfx-java
-apt-get -y install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
-apt-get -y install php npm node.js valgrind bc
-pip  install --break-system-packages pyyaml jinja2 
-npm install -g openwolf
+apt-get -y install python3-pip python3 python3-pandas openjfx libopenjfx-java
+pip3 install --break-system-packages pyyaml jinja2
 
-
-/./provide_gcc.sh
-
-# apt-get -y install make automake autoconf gcc-12-arm-linux-gnueabi gcc-12-arm-linux-gnueabi-base gcc-arm-none-eabi binutils-arm-none-eabi git nano openjdk-21-jdk-headless mtools dosfstools xxd wget gcc-mingw-w64 g++-mingw-w64 zip gcc g++ 
-# apt-get -y install gcc-multilib g++-multilib
-
+# 安装 ARM GCC 工具链
+chmod +x /provide_gcc.sh
+/provide_gcc.sh
