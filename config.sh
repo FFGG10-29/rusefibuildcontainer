@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
+# 配置 apt 代理（通过环境变量 HTTP_PROXY 传入）
+if [ -n "$HTTP_PROXY" ]; then
+    echo "Acquire::http::Proxy \"$HTTP_PROXY\";" > /etc/apt/apt.conf.d/99proxy
+    echo "Acquire::https::Proxy \"$HTTPS_PROXY\";" >> /etc/apt/apt.conf.d/99proxy
+    echo "Using proxy: $HTTP_PROXY"
+fi
+
 # 更新包索引
 apt-get -y update
 

@@ -18,7 +18,14 @@ rm -rf "${TMP_DIR}"
 echo "Downloading and extracting ${archive}..."
 mkdir -p "${TMP_DIR}"
 cd "${TMP_DIR}"
-curl -L -o "${archive}" "${URL}"
+
+# Use proxy if set
+CURL_OPTS="-L"
+if [ -n "$HTTPS_PROXY" ]; then
+    CURL_OPTS="$CURL_OPTS --proxy $HTTPS_PROXY"
+    echo "Using proxy: $HTTPS_PROXY"
+fi
+curl $CURL_OPTS -o "${archive}" "${URL}"
 tar -xaf "${archive}"
 echo "Cleaning ${archive}"
 rm "${archive}"
